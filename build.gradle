@@ -22,3 +22,37 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task printMessage {
+    doLast{
+        println("Message from task that depends on printHello")
+    }
+}
+
+task printHello {
+    doLast{
+        println("Hello from task that build depends on")
+    }
+    finalizedBy printMessage
+}
+
+task printMessage2 {
+    doLast{
+        println("A second message from task that must run after printMessage")
+    }
+}
+
+task printBye {
+    doLast{
+        println("Bye. This message is generated after build")
+    }
+}
+
+printMessage2.mustRunAfter(printMessage)
+
+printMessage.dependsOn(printHello)
+
+build.dependsOn(printHello)
+
+build.finalizedBy(printBye)
+
